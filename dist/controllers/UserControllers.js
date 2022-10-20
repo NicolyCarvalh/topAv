@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const Users = require('../users.json');
-/*import * as Yup from 'yup';
+import * as Yup from 'yup';
 
 const usersSchema = Yup.object().shape({
     id: Yup.number().required(),
@@ -10,7 +10,7 @@ const usersSchema = Yup.object().shape({
     email: Yup.string().required(),
     sexo: Yup.string().required(),
     idade: Yup.number().required(),
-}); */
+}); 
 exports.default = {
     async listar(request, response) {
         const { id, nome, sobrenome, email, sexo, idade } = request.body;
