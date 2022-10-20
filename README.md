@@ -21,4 +21,3 @@ os atributos `nome`, `sobrenome`e o atributo especifico da busca do método.
 | GET    | '/usuario/:id'     | buscar um usuario com `id` passado como parâmetro da requisição | 
 | POST   | '/usuario/idade'   | buscar usuarios com idade acima  do parametro "idade" passado no corpo da requisição (`body`)   | 
 | POST   | '/usuario/sexo'    | buscar usuarios com sexo, por parametro "sexo" passado no corpo da requisição (`body`)   | 
-
