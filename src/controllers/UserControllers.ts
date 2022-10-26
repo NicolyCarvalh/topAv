@@ -1,61 +1,52 @@
 import { Request, Response } from 'express';
-const Users = require('../users.json');
-import * as Yup from 'yup';
+const Users = require('../users.json')
 
-const usersSchema = Yup.object().shape({
-    id: Yup.number().required(),
-    nome: Yup.string().required(),
-    sobrenome: Yup.string().required(),
-    email: Yup.string().required(),
-    sexo: Yup.string().required(),
-    idade: Yup.number().required(),
-}); 
+interface Usuario {
+    id: Number;
+    nome: String;
+    sobrenome: String;
+    email: String;
+    sexo: String;
+    idade: Number;
+}
+
 
 export default {
-        async listar (request: Request, response: Response) {
-            const {id, nome, sobrenome, email, sexo, idade} = request.body;
-            const users = await Users.listar({
-                $or: [{ id: id }, {nome: nome }, { sobrenome: sobrenome }, { email: email}, {sexo: sexo}, {idade: idade}],
-            });
-            if (users) {
-                return response.status(200).json(users);
-            }
-            return response.status(400).json({ message: 'dados não encontrados' });
-        },
+    listar(request: Request, response: Response) {
+        return response.status(200).json(Users);
+    },
 
-        async buscarID (request: Request, response: Response) {
-            const {id} = request.body;
-            const {nome, sobrenome} = request.body;
-            const users = await Users.buscarID({
-                $or: [{ id: id }, {nome: nome }, { sobrenome: sobrenome }],
-            });
-            if (users) {
-                return response.status(200).json(users);
-            }
-            return response.status(400).json({ message: 'id nao encontrada' });
-        },
+    buscarId(request: Request, response: Response) {
+        const { id } = request.params;
+        const resultado = Users.find(
+            (usuario: Usuario) => usuario.id == parseInt(id)
+        );
 
-        async buscarIdade (request: Request, response: Response) {
-            const {idade} = request.body;
-            const {nome, sobrenome } = request.body;
-            const users = await Users.buscarIdade({
-                $or: [{ idade: idade }, {nome: nome }, { sobrenome: sobrenome }],
-            });
-            if (users) {
-                return response.status(200).json(users);
-            }
-            return response.status(400).json({ message: 'idade não localizada' });
-        }, 
+        return response.status(200).json(resultado)
+    },
 
-        async buscarSexo (request: Request, response: Response) {
-            const {sexo} = request.body;
-            const {nome, sobrenome } = request.body;
-            const users = await Users.buscarSexo({
-                $or: [{ sexo: sexo }, {nome: nome }, { sobrenome: sobrenome }],
-            });
-            if (users) {
-                return response.status(200).json(users);
-            }
-            return response.status(400).json({ message: 'sexo não localizado' });
+    buscarIdade(request: Request, response: Response) {
+        const { idade } = request.body;
+        const resultado = Users.filter(
+            (usuario: Usuario) => usuario.idade > idade
+        );
+        if(resultado){
+            return response.status(200).json(resultado)
         }
-    }
+        return response
+            .status(200)
+            .json({message: 'Usuario com idade não encontrado'});
+    },
+    buscarSexo(request: Request, response: Response) { 
+        const{ sexo } = request.body;
+        const resultado = Users.filter(
+            (usuario: Usuario) => usuario.sexo === sexo
+        );
+        if(resultado){
+            return response.status (200).json(resultado);
+        }
+        return response
+            .status(200)
+            .json({message: 'Usuario com sexo não encotrado'})
+}
+};
